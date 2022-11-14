@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "906764C1291026310027D4B1"
-               BuildableName = "UnitTestingBaz.app"
+               BuildableName = "Pokedex.app"
                BlueprintName = "Pokedex"
                ReferencedContainer = "container:Pokedex.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "906764C1291026310027D4B1"
-            BuildableName = "UnitTestingBaz.app"
+            BuildableName = "Pokedex.app"
             BlueprintName = "Pokedex"
             ReferencedContainer = "container:Pokedex.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "906764C1291026310027D4B1"
-            BuildableName = "UnitTestingBaz.app"
+            BuildableName = "Pokedex.app"
             BlueprintName = "Pokedex"
             ReferencedContainer = "container:Pokedex.xcodeproj">
          </BuildableReference>
