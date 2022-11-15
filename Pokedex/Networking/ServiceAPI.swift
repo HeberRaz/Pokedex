@@ -31,7 +31,7 @@ class ServiceAPI: Service {
             }
             
             guard let data: Data = data else {
-                callback(.failure(ServiceError.response))
+                callback(.failure(ServiceError.noData))
                 return
             }
             

@@ -45,7 +45,7 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
         view = PokedexMainViewController()
         interactor = PokedexMainInteractor()
         presenter = PokedexMainPresenter()
-        remoteData = PokedexMainRemoteDataManager()
+        remoteData = PokedexMainRemoteDataManager(service: ServiceAPI(session: URLSession.shared))
         router = self
     }
     

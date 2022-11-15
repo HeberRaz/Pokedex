@@ -11,11 +11,16 @@ final class PokedexMainRemoteDataManager {
     
     // MARK: - Protocol properties
     weak var interactor: PokedexRemoteDataOutputProtocol?
+    
+    private var service: Service
+    
+    init(service: Service) {
+        self.service = service
+    }
 }
 
 extension PokedexMainRemoteDataManager: PokedexMainRemoteDataInputProtocol {
     func requestPokemonBlock(_ urlString: String?) {
-        let service = ServiceAPI(session: URLSession.shared)
             service.get(Endpoint.next(urlString: urlString ?? Endpoint.baseURL)) { [weak self] (result: Result<PokemonBlock, Error>) in
                 switch result {
                 case .success(let pokemonBlock):
@@ -27,7 +32,6 @@ extension PokedexMainRemoteDataManager: PokedexMainRemoteDataInputProtocol {
         }
         
         func requestPokemon(_ name: String) {
-            let service = ServiceAPI(session: URLSession.shared)
             service.get(Endpoint.pokemon(nameOrId: name)) { [weak self] (result: Result<PokemonDetail, Error>) in
                 switch result {
                 case .success(let pokemonDetail):
