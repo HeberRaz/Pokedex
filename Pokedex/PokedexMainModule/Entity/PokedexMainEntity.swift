@@ -30,8 +30,8 @@ struct PokemonCellModel: CustomCellViewData {
 // MARK: - Pokemon Block
 
 struct PokemonBlock: Decodable {
-    let count: Int?
-    let next: String?
+    let count: Int
+    let next: String
     let previous: String?
     let results: [PokemonBlockResult]?
 }

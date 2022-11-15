@@ -12,7 +12,7 @@ import UIKit
 
 // Presenter > Router
 protocol PokedexMainRouterProtocol {
-    func createPokedexMainModule() -> UINavigationController
+    func createPokedexMainModule() -> UIViewController
     func popViewController(from view: PokedexMainViewControllerProtocol)
     func presentPokemonDetail(named pokemonName: String)
 }

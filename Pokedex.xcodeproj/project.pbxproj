@@ -27,6 +27,10 @@
 		906764EC291029200027D4B1 /* PokedexMainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906764EB291029200027D4B1 /* PokedexMainRouter.swift */; };
 		90D14E8F2922A7FA004EE907 /* ServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14E8E2922A7FA004EE907 /* ServiceProtocols.swift */; };
 		90D14E912922A83D004EE907 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14E902922A83D004EE907 /* ServiceError.swift */; };
+		90D14ECE2923F151004EE907 /* PokedexStartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14ECD2923F151004EE907 /* PokedexStartPresenter.swift */; };
+		90D14ED02923F165004EE907 /* PokedexStartRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14ECF2923F165004EE907 /* PokedexStartRouter.swift */; };
+		90D14ED22923F170004EE907 /* PokedexStartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14ED12923F170004EE907 /* PokedexStartViewController.swift */; };
+		90D14ED42923F1C2004EE907 /* PokedexStartProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14ED32923F1C2004EE907 /* PokedexStartProtocols.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +56,10 @@
 		906764EB291029200027D4B1 /* PokedexMainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexMainRouter.swift; sourceTree = "<group>"; };
 		90D14E8E2922A7FA004EE907 /* ServiceProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProtocols.swift; sourceTree = "<group>"; };
 		90D14E902922A83D004EE907 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
+		90D14ECD2923F151004EE907 /* PokedexStartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexStartPresenter.swift; sourceTree = "<group>"; };
+		90D14ECF2923F165004EE907 /* PokedexStartRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexStartRouter.swift; sourceTree = "<group>"; };
+		90D14ED12923F170004EE907 /* PokedexStartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexStartViewController.swift; sourceTree = "<group>"; };
+		90D14ED32923F1C2004EE907 /* PokedexStartProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexStartProtocols.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,6 +121,7 @@
 			children = (
 				90285B6F29156DF800A67AE3 /* Reusable */,
 				9056F0672910A0FE000C98C2 /* Networking */,
+				90D14ECC2923F13C004EE907 /* PokedexStartModule */,
 				906764D9291028980027D4B1 /* PokedexMainModule */,
 				906764C5291026310027D4B1 /* AppDelegate.swift */,
 				906764C7291026310027D4B1 /* SceneDelegate.swift */,
@@ -197,6 +206,17 @@
 			path = Protocols;
 			sourceTree = "<group>";
 		};
+		90D14ECC2923F13C004EE907 /* PokedexStartModule */ = {
+			isa = PBXGroup;
+			children = (
+				90D14ECD2923F151004EE907 /* PokedexStartPresenter.swift */,
+				90D14ECF2923F165004EE907 /* PokedexStartRouter.swift */,
+				90D14ED12923F170004EE907 /* PokedexStartViewController.swift */,
+				90D14ED32923F1C2004EE907 /* PokedexStartProtocols.swift */,
+			);
+			path = PokedexStartModule;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -271,13 +291,17 @@
 				906764CA291026310027D4B1 /* ViewController.swift in Sources */,
 				90356D2A29105AFA0013CDEA /* PokedexMainEntity.swift in Sources */,
 				906764EA291029150027D4B1 /* PokedexMainPresenter.swift in Sources */,
+				90D14ED22923F170004EE907 /* PokedexStartViewController.swift in Sources */,
 				9056F0692910A107000C98C2 /* Endpoint.swift in Sources */,
 				906764E2291028E60027D4B1 /* PokedexMainProtocols.swift in Sources */,
 				9056F06B2910AA5F000C98C2 /* ServiceAPI.swift in Sources */,
 				90356D3129106BA00013CDEA /* PokedexSectionHeaderView.swift in Sources */,
 				906764C6291026310027D4B1 /* AppDelegate.swift in Sources */,
 				90285B7129156E1300A67AE3 /* ShadowStyler.swift in Sources */,
+				90D14ED42923F1C2004EE907 /* PokedexStartProtocols.swift in Sources */,
+				90D14ED02923F165004EE907 /* PokedexStartRouter.swift in Sources */,
 				90D14E8F2922A7FA004EE907 /* ServiceProtocols.swift in Sources */,
+				90D14ECE2923F151004EE907 /* PokedexStartPresenter.swift in Sources */,
 				906764C8291026310027D4B1 /* SceneDelegate.swift in Sources */,
 				906764E6291029020027D4B1 /* PokedexMainViewController.swift in Sources */,
 				90D14E912922A83D004EE907 /* ServiceError.swift in Sources */,

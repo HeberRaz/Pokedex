@@ -18,14 +18,13 @@ final class PokedexMainRouter {
 
 extension PokedexMainRouter: PokedexMainRouterProtocol {
     
-    func createPokedexMainModule() -> UINavigationController {
+    func createPokedexMainModule() -> UIViewController {
         buildModuleComponents()
         linkDependencies()
         guard let viewController: UIViewController = view as? UIViewController else {
-            return UINavigationController()
+            return UIViewController()
         }
-        let navigationController: UINavigationController = UINavigationController(rootViewController: viewController)
-        return navigationController
+        return viewController
     }
     
     func popViewController(from view: PokedexMainViewControllerProtocol) {
