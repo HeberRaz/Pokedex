@@ -70,7 +70,18 @@ class PokedexMainRemoteDataTests: XCTestCase {
         }
     }
     
-    func testExample3() {
-
+    func testRequestPokemonBlock_whenStatusCode300To500_callsHandlePokemonBlockFetch() {
+        // Given
+        for statusCode in 300...500 {
+            let url: URL = URL(fileURLWithPath: "")
+            let urlString = "https://fakeurl.com"
+            sessionMock.urlResponse = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)
+            sessionMock.data = PokedexMainFakes().pokemonBlock
+            // When
+            sut.requestPokemonBlock(urlString)
+            // Then
+            XCTAssert(interactorMock.calls.contains(.handleServiceError))
+            XCTAssertFalse(interactorMock.calls.contains(.handlePokemonBlockFetch))
+        }
     }
 }
