@@ -35,6 +35,7 @@ class PokedexMainRemoteDataTests: XCTestCase {
 
     func testRequestPokemonBlock_whenResponseError_callsInteractorHandler() {
         // Given
+        sessionMock.data = Data()
         let urlString = "https://fakeurl.com"
         // When
         sut.requestPokemonBlock(urlString)
@@ -53,8 +54,20 @@ class PokedexMainRemoteDataTests: XCTestCase {
         XCTAssertEqual(interactorMock.catchedError, .noData, "Se espera que el código regrese del tipo ServiceError.noData")
     }
     
-    func testExample2() {
+    func testRequestPokemonBlock_whenStatusCode200_callsHandlePokemonBlockFetch() {
+        // Given
+        for statusCode in 200...299 {
+            let url: URL = URL(fileURLWithPath: "")
+            let urlString = "https://fakeurl.com"
+            sessionMock.urlResponse = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)
+            sessionMock.data = PokedexMainFakes().pokemonBlock
+            // When
+            sut.requestPokemonBlock(urlString)
+            // Then
+            XCTAssert(interactorMock.calls.contains(.handlePokemonBlockFetch))
+            XCTAssertFalse(interactorMock.calls.contains(.handleServiceError))
 
+        }
     }
     
     func testExample3() {
