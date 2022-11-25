@@ -15,48 +15,52 @@ final class PokedexMainViewController: UIViewController {
     var pokemonList: [PokemonCellModel] = []
     
     // MARK: - Private properties
-    private let tableView: UITableView = UITableView()
+    private weak var tableView: UITableView?
     private typealias Constants = PokedexMainConstants
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
+    override func loadView() {
+        super.loadView()
         presenter?.willFetchPokemons()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        view.backgroundColor = .white
         setupNavigationBar()
         setupTableView()
         registerCells()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        view.backgroundColor = .white
+        
+    }
+    
     // MARK: - Private methods
+    
     
     private func setupNavigationBar() {
         title = "Pokemon"
     }
     
     private func setupTableView() {
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
-        tableView.separatorStyle = .none
+        let pokemonTableView: UITableView = UITableView()
+        pokemonTableView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(pokemonTableView)
+        pokemonTableView.separatorStyle = .none
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.prefetchDataSource = self
+        pokemonTableView.delegate = self
+        pokemonTableView.dataSource = self
+        pokemonTableView.prefetchDataSource = self
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.borderPadding),
-            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.borderPadding),
-            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.borderPadding),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.borderPadding)
+            pokemonTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: Constants.borderPadding),
+            pokemonTableView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: Constants.borderPadding),
+            pokemonTableView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -Constants.borderPadding),
+            pokemonTableView.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -Constants.borderPadding)
         ])
+        self.tableView = pokemonTableView
     }
     
     private func registerCells() {
-        tableView.register(PokedexSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: PokedexSectionHeaderView.reuseIdentifier)
-        tableView.register(PokemonCell.self, forCellReuseIdentifier: PokemonCell.cellIdentifier)
+        tableView?.register(PokedexSectionHeaderView.self, forHeaderFooterViewReuseIdentifier: PokedexSectionHeaderView.reuseIdentifier)
+        tableView?.register(PokemonCell.self, forCellReuseIdentifier: PokemonCell.cellIdentifier)
     }
     
     @objc private func closeView() {
@@ -67,7 +71,7 @@ final class PokedexMainViewController: UIViewController {
 extension PokedexMainViewController: PokedexMainViewControllerProtocol {
     func reloadInformation() {
         DispatchQueue.main.async {
-            self.tableView.reloadData()
+            self.tableView?.reloadData()
         }
     }
     

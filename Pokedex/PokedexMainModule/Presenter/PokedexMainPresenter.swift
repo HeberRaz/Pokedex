@@ -29,7 +29,7 @@ extension PokedexMainPresenter: PokedexMainPresenterProtocol {
     
     func didSelectRowAt(_ indexPath: IndexPath) {
         let pokemonName: String = view?.pokemonList[indexPath.row].name ?? ""
-        router?.presentPokemonDetail(named: pokemonName)
+        router?.presentPokemonDetail(named: pokemonName, from: view)
     }
     
     func willPopController(from view: PokedexMainViewControllerProtocol) {

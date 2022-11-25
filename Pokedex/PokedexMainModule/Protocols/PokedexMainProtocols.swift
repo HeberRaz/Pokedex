@@ -11,10 +11,10 @@ import UIKit
 // MARK: - VIPER protocols
 
 // Presenter > Router
-protocol PokedexMainRouterProtocol {
+protocol PokedexMainRouterProtocol: AnyObject {
     func createPokedexMainModule() -> UIViewController
     func popViewController(from view: PokedexMainViewControllerProtocol)
-    func presentPokemonDetail(named pokemonName: String)
+    func presentPokemonDetail(named pokemonName: String, from view: PokedexMainViewControllerProtocol?)
 }
 
 // View > Presenter
@@ -44,8 +44,16 @@ protocol PokedexMainPresenterProtocol: AnyObject {
     func willFetchPokemons()
 }
 
+extension PokedexMainPresenterProtocol {
+    func linkDependencies(view: PokedexMainViewControllerProtocol, router: PokedexMainRouterProtocol, interactor: PokedexMainInteractorInputProtocol) {
+        self.view = view
+        (self as? PokedexMainInteractorOutputProtocol)?.interactor = interactor
+        self.router = router
+    }
+}
+
 // Interactor > Presenter
-protocol PokedexMainInteractorInputProtocol {
+protocol PokedexMainInteractorInputProtocol: AnyObject {
     var presenter: PokedexMainInteractorOutputProtocol? { get set }
     var remoteData: PokedexMainRemoteDataInputProtocol? { get set }
     
@@ -53,11 +61,18 @@ protocol PokedexMainInteractorInputProtocol {
     
     func fetchPokemonBlock(_ urlString: String?)
     func fetchDetailFrom(pokemonName: String)
+    
+    func linkDependencies(remoteData: PokedexMainRemoteDataInputProtocol, presenter: PokedexMainInteractorOutputProtocol)
 }
 
 extension PokedexMainInteractorInputProtocol {
     func fetchPokemonBlock(_ urlString: String? = nil) {
         fetchPokemonBlock(nil)
+    }
+    
+    func linkDependencies(remoteData: PokedexMainRemoteDataInputProtocol, presenter: PokedexMainInteractorOutputProtocol) {
+        self.presenter = presenter
+        self.remoteData = remoteData
     }
 }
 

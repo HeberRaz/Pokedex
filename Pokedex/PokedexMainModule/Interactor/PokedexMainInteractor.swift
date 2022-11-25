@@ -7,7 +7,7 @@
 
 import Foundation
 
-final class PokedexMainInteractor {
+class PokedexMainInteractor {
     
     // MARK: - Protocol properties
     

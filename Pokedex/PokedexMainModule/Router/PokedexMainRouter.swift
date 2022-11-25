@@ -8,23 +8,22 @@
 import UIKit
 
 final class PokedexMainRouter {
-    // MARK: - Properties
-    var view: PokedexMainViewControllerProtocol?
-    var interactor: (PokedexMainInteractorInputProtocol & PokedexRemoteDataOutputProtocol)?
-    var presenter: (PokedexMainPresenterProtocol & PokedexMainInteractorOutputProtocol)?
-    var router: PokedexMainRouterProtocol?
-    var remoteData: PokedexMainRemoteDataInputProtocol?
 }
 
 extension PokedexMainRouter: PokedexMainRouterProtocol {
     
     func createPokedexMainModule() -> UIViewController {
-        buildModuleComponents()
-        linkDependencies()
-        guard let viewController: UIViewController = view as? UIViewController else {
-            return UIViewController()
-        }
-        return viewController
+        let view = PokedexMainViewController()
+        let interactor = PokedexMainInteractor()
+        let presenter = PokedexMainPresenter()
+        let remoteData = PokedexMainRemoteDataManager(service: ServiceAPI(session: URLSession.shared))
+
+        view.presenter = presenter
+        presenter.linkDependencies(view: view, router: self, interactor: interactor)
+        interactor.linkDependencies(remoteData: remoteData, presenter: presenter)
+        remoteData.interactor = interactor
+
+        return (view as UIViewController)
     }
     
     func popViewController(from view: PokedexMainViewControllerProtocol) {
@@ -32,8 +31,8 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
         viewController.navigationController?.popViewController(animated: true)
     }
     
-    func presentPokemonDetail(named pokemonNake: String) {
-        guard let viewController: UIViewController = self.view as? UIViewController else { return }
+    func presentPokemonDetail(named pokemonNake: String, from view: PokedexMainViewControllerProtocol?) {
+        guard let viewController: UIViewController = view as? UIViewController else { return }
         //let detailRouter = PokedexDetailRouter()
         let vc = ViewController()
         viewController.navigationController?.pushViewController(vc, animated: true)
@@ -42,20 +41,10 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
     // MARK: - Private methods
     
     private func buildModuleComponents() {
-        view = PokedexMainViewController()
-        interactor = PokedexMainInteractor()
-        presenter = PokedexMainPresenter()
-        remoteData = PokedexMainRemoteDataManager(service: ServiceAPI(session: URLSession.shared))
-        router = self
+       
     }
     
     private func linkDependencies() {
-        view?.presenter = self.presenter
-        presenter?.view = self.view
-        presenter?.interactor = self.interactor
-        presenter?.router = self
-        interactor?.remoteData = self.remoteData
-        interactor?.presenter = self.presenter
-        remoteData?.interactor = self.interactor
+        
     }
 }
