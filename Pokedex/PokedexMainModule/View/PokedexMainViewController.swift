@@ -29,11 +29,9 @@ final class PokedexMainViewController: UIViewController {
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         view.backgroundColor = .white
-        
     }
     
     // MARK: - Private methods
-    
     
     private func setupNavigationBar() {
         title = "Pokemon"
@@ -70,19 +68,15 @@ final class PokedexMainViewController: UIViewController {
 
 extension PokedexMainViewController: PokedexMainViewControllerProtocol {
     func reloadInformation() {
-        DispatchQueue.main.async {
-            self.tableView?.reloadData()
-        }
+        self.tableView?.reloadData()
     }
     
     func fillPokemonList() {
-        DispatchQueue.main.async {
             guard let lastPokemon: Pokemon = self.presenter?.model.last else { return }
             self.pokemonList.append(PokemonCellModel(from: lastPokemon))
             self.pokemonList = self.pokemonList.sorted { previous, next in
                 return previous.id < next.id
             }
-        }
         self.presenter?.reloadSections()
     }
 }

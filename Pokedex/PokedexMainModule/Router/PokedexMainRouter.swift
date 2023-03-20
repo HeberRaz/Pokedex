@@ -16,7 +16,8 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
         let view = PokedexMainViewController()
         let interactor = PokedexMainInteractor()
         let presenter = PokedexMainPresenter()
-        let remoteData = PokedexMainRemoteDataManager(service: ServiceAPI(session: URLSession.shared))
+        let service = MainQueueDispatchDecorator(decoratee: ServiceAPI(session: URLSession.shared))
+        let remoteData = PokedexMainRemoteDataManager(service: service)
 
         view.presenter = presenter
         presenter.linkDependencies(view: view, router: self, interactor: interactor)
@@ -36,15 +37,5 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
         //let detailRouter = PokedexDetailRouter()
         let vc = ViewController()
         viewController.navigationController?.pushViewController(vc, animated: true)
-    }
-    
-    // MARK: - Private methods
-    
-    private func buildModuleComponents() {
-       
-    }
-    
-    private func linkDependencies() {
-        
     }
 }

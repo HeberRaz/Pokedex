@@ -10,6 +10,7 @@ import Foundation
 protocol Service {
     var session: URLSessionProtocol { get }
     func get<T: Decodable>(_ endpoint: Endpoint, callback: @escaping (Result<T,Error>) -> Void)
+    func fetchImageData(urlString: String, completion: @escaping (Data?) -> Void)
 }
 
 protocol URLSessionDataTaskProtocol {

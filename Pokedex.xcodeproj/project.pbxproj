@@ -39,6 +39,7 @@
 		90DF092E29244DAC005FA632 /* URLSessionMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DF092D29244DAC005FA632 /* URLSessionMock.swift */; };
 		90DF093A29259831005FA632 /* pokemonBlock.json in Resources */ = {isa = PBXBuildFile; fileRef = 90DF093929259831005FA632 /* pokemonBlock.json */; };
 		90DF093C2925985D005FA632 /* PokedexMainFakes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90DF093B2925985D005FA632 /* PokedexMainFakes.swift */; };
+		EE1FD8FE29C918D40098ABAB /* PokedexMainDispatchDecorator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE1FD8FD29C918D40098ABAB /* PokedexMainDispatchDecorator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,6 +88,7 @@
 		90DF092D29244DAC005FA632 /* URLSessionMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLSessionMock.swift; sourceTree = "<group>"; };
 		90DF093929259831005FA632 /* pokemonBlock.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = pokemonBlock.json; sourceTree = "<group>"; };
 		90DF093B2925985D005FA632 /* PokedexMainFakes.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexMainFakes.swift; sourceTree = "<group>"; };
+		EE1FD8FD29C918D40098ABAB /* PokedexMainDispatchDecorator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexMainDispatchDecorator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -230,6 +232,7 @@
 			isa = PBXGroup;
 			children = (
 				906764E3291028F70027D4B1 /* PokedexMainRemoteDataManager.swift */,
+				EE1FD8FD29C918D40098ABAB /* PokedexMainDispatchDecorator.swift */,
 			);
 			path = DataManager;
 			sourceTree = "<group>";
@@ -414,6 +417,7 @@
 				90285B7129156E1300A67AE3 /* ShadowStyler.swift in Sources */,
 				90D14ED42923F1C2004EE907 /* PokedexStartProtocols.swift in Sources */,
 				90D14ED02923F165004EE907 /* PokedexStartRouter.swift in Sources */,
+				EE1FD8FE29C918D40098ABAB /* PokedexMainDispatchDecorator.swift in Sources */,
 				90D14E8F2922A7FA004EE907 /* ServiceProtocols.swift in Sources */,
 				90D14ECE2923F151004EE907 /* PokedexStartPresenter.swift in Sources */,
 				906764C8291026310027D4B1 /* SceneDelegate.swift in Sources */,

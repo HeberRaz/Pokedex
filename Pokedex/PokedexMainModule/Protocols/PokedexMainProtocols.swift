@@ -92,6 +92,7 @@ protocol PokedexMainRemoteDataInputProtocol {
     
     func requestPokemonBlock(_ urlString: String?)
     func requestPokemon(_ name: String)
+    func requestImageData(urlString: String, completion: @escaping (Data?) -> Void)
 }
 
 // RemoteData > Interactor

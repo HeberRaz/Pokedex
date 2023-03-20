@@ -28,25 +28,6 @@ extension PokedexMainInteractor: PokedexMainInteractorInputProtocol {
     func fetchDetailFrom(pokemonName: String) {
         remoteData?.requestPokemon(pokemonName)
     }
-    
-    private func getImageDataFrom(urlString: String) -> Data? {
-        guard let imageUrl: URL = URL(string: urlString) else {
-            return nil
-        }
-        do {
-            let imageData: Data = try Data(contentsOf: imageUrl)
-            return imageData
-        } catch {
-            return nil
-        }
-    }
-    
-    private func handleSuccessfulDetailRequest(with pokemon: PokemonDetail) {
-        guard let imageData: Data = self.getImageDataFrom(urlString: pokemon.sprites.frontDefault)
-        else { return }
-        self.pokemonList.append(Pokemon(from: pokemon, imageData: imageData))
-        self.presenter?.onReceivedPokemon(Pokemon(from: pokemon, imageData: imageData))
-    }
 }
 
 extension PokedexMainInteractor: PokedexRemoteDataOutputProtocol {
@@ -57,9 +38,10 @@ extension PokedexMainInteractor: PokedexRemoteDataOutputProtocol {
     }
     
     func handleFetchedPokemon(_ pokemonDetail: PokemonDetail) {
-        guard let imageData: Data = self.getImageDataFrom(urlString: pokemonDetail.sprites.frontDefault)
-        else { return }
-        self.presenter?.onReceivedPokemon(Pokemon(from: pokemonDetail, imageData: imageData))
+        remoteData?.requestImageData(urlString: pokemonDetail.sprites.frontDefault, completion: { data in
+            guard let imageData = data else { return }
+            self.presenter?.onReceivedPokemon(Pokemon(from: pokemonDetail, imageData: imageData))
+        })
     }
     
     
