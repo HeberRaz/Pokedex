@@ -26,6 +26,7 @@ class ServiceAPI: Service {
         let request = endpoint.request
         DispatchQueue.global().async {
             let task = self.session.performDataTask(with: request) { (data, response, error) in
+
                 if let error: Error = error {
                     callback(.failure(error))
                     return
