@@ -35,21 +35,27 @@ class PokedexMainRemoteDataTests: XCTestCase {
 
     func testRequestPokemonBlock_whenResponseError_callsInteractorHandler() {
         // Given
+        let expectation = expectation(description: "Wait for completion")
         sessionMock.data = Data()
         let urlString = "https://fakeurl.com"
         // When
         sut.requestPokemonBlock(urlString)
+        expectation.fulfill()
         // Then
+        wait(for: [expectation], timeout: 0.1)
         XCTAssert(interactorMock.calls.contains(.handleServiceError))
         XCTAssertEqual(interactorMock.catchedError, .response, "Se espera que el código regrese del tipo ServiceError.response")
     }
     
     func testRequestPokemonBlock_whenNoDataError_callsInteractorHandler() {
         // Given
+        let expectation = expectation(description: "Wait for completion")
         let urlString = "https://fakeurl.com"
         // When
         sut.requestPokemonBlock(urlString)
+        expectation.fulfill()
         // Then
+        wait(for: [expectation], timeout: 0.1)
         XCTAssert(interactorMock.calls.contains(.handleServiceError))
         XCTAssertEqual(interactorMock.catchedError, .noData, "Se espera que el código regrese del tipo ServiceError.noData")
     }
@@ -57,29 +63,35 @@ class PokedexMainRemoteDataTests: XCTestCase {
     func testRequestPokemonBlock_whenStatusCode200_callsHandlePokemonBlockFetch() {
         // Given
         for statusCode in 200...299 {
+            let expectation = expectation(description: "Wait for completion status code \(statusCode)")
             let url: URL = URL(fileURLWithPath: "")
             let urlString = "https://fakeurl.com"
             sessionMock.urlResponse = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)
             sessionMock.data = PokedexMainFakes().pokemonBlock
+            sessionMock.expectation = expectation
             // When
             sut.requestPokemonBlock(urlString)
+
             // Then
+            wait(for: [expectation], timeout: 0.1)
             XCTAssert(interactorMock.calls.contains(.handlePokemonBlockFetch))
             XCTAssertFalse(interactorMock.calls.contains(.handleServiceError))
-
         }
     }
     
     func testRequestPokemonBlock_whenStatusCode300To500_callsHandlePokemonBlockFetch() {
         // Given
         for statusCode in 300...500 {
+            let expectation = expectation(description: "Wait for expecation \(statusCode)")
             let url: URL = URL(fileURLWithPath: "")
             let urlString = "https://fakeurl.com"
             sessionMock.urlResponse = HTTPURLResponse(url: url, statusCode: statusCode, httpVersion: nil, headerFields: nil)
             sessionMock.data = PokedexMainFakes().pokemonBlock
+            sessionMock.expectation = expectation
             // When
             sut.requestPokemonBlock(urlString)
             // Then
+            wait(for: [expectation], timeout: 0.5)
             XCTAssert(interactorMock.calls.contains(.handleServiceError))
             XCTAssertFalse(interactorMock.calls.contains(.handlePokemonBlockFetch))
         }
