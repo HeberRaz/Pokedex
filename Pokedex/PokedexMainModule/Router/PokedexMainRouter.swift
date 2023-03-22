@@ -34,7 +34,6 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
     
     func presentPokemonDetail(named pokemonNake: String, from view: PokedexMainViewControllerProtocol?) {
         guard let viewController: UIViewController = view as? UIViewController else { return }
-        //let detailRouter = PokedexDetailRouter()
         let vc = ViewController()
         viewController.navigationController?.pushViewController(vc, animated: true)
     }
