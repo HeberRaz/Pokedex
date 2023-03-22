@@ -7,11 +7,7 @@
 
 import UIKit
 
-final class PokedexMainRouter {
-}
-
-extension PokedexMainRouter: PokedexMainRouterProtocol {
-    
+final class PokedexMainRouter: PokedexMainRouterProtocol {
     func createPokedexMainModule() -> UIViewController {
         let view = PokedexMainViewController()
         let interactor = PokedexMainInteractor()
@@ -26,12 +22,12 @@ extension PokedexMainRouter: PokedexMainRouterProtocol {
 
         return (view as UIViewController)
     }
-    
+
     func popViewController(from view: PokedexMainViewControllerProtocol) {
         guard let viewController: UIViewController = view as? UIViewController else { return }
         viewController.navigationController?.popViewController(animated: true)
     }
-    
+
     func presentPokemonDetail(named pokemonNake: String, from view: PokedexMainViewControllerProtocol?) {
         guard let viewController: UIViewController = view as? UIViewController else { return }
         let vc = ViewController()
