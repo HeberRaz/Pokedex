@@ -6,3 +6,11 @@
 //
 
 import Foundation
+
+protocol PokedexDetailDataManagerInputProtocol {
+    var interactor: PokedexDetailDataManagerOutputProtocol? { get set }
+}
+
+final class PokedexDetailDataManager {
+    var interactor: PokedexDetailDataManagerOutputProtocol?
+}
