@@ -11,9 +11,11 @@ import Foundation
 enum PokedexMainRemoteDataManagerCalls{
     case requestPokemonBlock
     case requestPokemonName
+    case requestImageData
 }
 
-class PokedexMainRemoteDataManagerMock: PokedexMainRemoteDataInputProtocol{
+class PokedexMainRemoteDataManagerMock: PokedexMainRemoteDataInputProtocol {
+
     var interactor: PokedexRemoteDataOutputProtocol?
     var calls:[PokedexMainRemoteDataManagerCalls] = []
     
@@ -23,5 +25,9 @@ class PokedexMainRemoteDataManagerMock: PokedexMainRemoteDataInputProtocol{
     
     func requestPokemon(_ name: String) {
         calls.append(.requestPokemonName)
+    }
+
+    func requestImageData(urlString: String, completion: @escaping (Data?) -> Void) {
+        calls.append(.requestImageData)
     }
 }

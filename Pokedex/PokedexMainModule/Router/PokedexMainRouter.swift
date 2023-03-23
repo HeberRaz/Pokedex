@@ -28,9 +28,9 @@ final class PokedexMainRouter: PokedexMainRouterProtocol {
         viewController.navigationController?.popViewController(animated: true)
     }
 
-    func presentPokemonDetail(named pokemonNake: String, from view: PokedexMainViewControllerProtocol?) {
+    func presentPokemonDetail(named pokemonName: String, from view: PokedexMainViewControllerProtocol?) {
         guard let viewController: UIViewController = view as? UIViewController else { return }
-        let vc = ViewController()
-        viewController.navigationController?.pushViewController(vc, animated: true)
+        let emptyViewController = ViewController()
+        viewController.navigationController?.pushViewController(emptyViewController, animated: true)
     }
 }
