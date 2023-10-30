@@ -37,7 +37,7 @@ final class PokedexStartViewController: UIViewController {
     
     private func setupButton() {
         start.addTarget(self, action: #selector(launchPokemonTable), for: .touchUpInside)
-        start.setTitle("Show Pokemon!", for: .normal)
+        start.setTitle(Localization.showPokemon, for: .normal)
     }
     
     @objc private func launchPokemonTable() {

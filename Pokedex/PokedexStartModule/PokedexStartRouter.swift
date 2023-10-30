@@ -32,7 +32,9 @@ extension PokedexStartRouter: PokedexStartRouterProtocol {
         guard let viewController: UIViewController = (self.view as? UIViewController) else { return }
         let mainRouter: PokedexMainRouterProtocol = PokedexMainRouter()
         let mainViewController = mainRouter.createPokedexMainModule()
-        viewController.navigationController?.pushViewController(mainViewController, animated: true)
+        mainViewController.modalPresentationStyle = .overFullScreen
+        mainViewController.modalTransitionStyle = .coverVertical
+        viewController.navigationController?.present(mainViewController, animated: true)
     }
     
     // MARK: Private methods
