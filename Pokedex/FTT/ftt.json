@@ -1,0 +1,27 @@
+{
+    "schemaVersion": 1,
+    "controls": [
+        { "id": "checkout_new_flow", "type": "flag", "enabled": false },
+
+        {
+            "id": "checkout_new_flow_rollout",
+            "type": "rollout",
+            "percentage": 20,
+            "enabled": true
+        },
+
+        {
+            "id": "home_header_experiment",
+            "type": "experiment",
+            "enabled": true,
+            "variants": { "A": 50, "B": 50 }
+        },
+
+        {
+            "id": "login_attempts",
+            "type": "throttle",
+            "enabled": true,
+            "maxPerMinute": 3
+        }
+    ]
+}

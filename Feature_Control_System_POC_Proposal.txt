@@ -1,0 +1,213 @@
+FEATURE CONTROL SYSTEM – PRACTICAL DESIGN PROPOSAL (POC)
+
+Author: Heber Alvarez (POC Draft) Purpose: Establish architectural
+foundations for a unified Feature Control System Scope: iOS POC
+(Firebase-backed) designed for future cross-platform scaling
+
+==================================================== 1. OBJECTIVE OF THE
+POC ====================================================
+
+This POC must demonstrate:
+
+1)  A single source of truth (JSON contract shared across platforms)
+2)  Unified evaluation logic (flag / rollout / experiment / throttle)
+3)  Deterministic percentage rollout
+4)  Local override mode (non-production only) with guardrails
+5)  Observability (logging why a decision was ON/OFF)
+
+The goal is not to fully implement governance automation, but to prove
+the architecture is robust and scalable.
+
+==================================================== 2. ARCHITECTURAL
+PRINCIPLE ====================================================
+
+IMPORTANT: Firebase is only a configuration source. All decision logic
+must live inside the app’s Feature Control domain layer.
+
+Core components:
+
+-   FeatureControlRepository Responsible for fetching JSON from Remote
+    Config (or local file).
+
+-   FeatureControlsSnapshot Parsed representation of the JSON contract.
+
+-   FeatureControlEvaluator Responsible for deciding: isEnabled(flag)
+    evaluateRollout(control) evaluateExperiment(control)
+    evaluateThrottle(control)
+
+-   LocalOverrideStore Debug-only override mechanism (persistent in
+    UserDefaults).
+
+-   UserIdentityProvider Provides stable identifier for deterministic
+    rollouts.
+
+==================================================== 3. CONTRACT EXAMPLE
+(MINIMAL POC VERSION)
+====================================================
+
+{ “schemaVersion”: 1, “controls”: [ { “id”: “checkout_new_flow”, “type”:
+“flag”, “enabled”: false },] }
+
+Code always references the readable ID (e.g., “checkout_new_flow”).
+
+Optional opaque alias can exist in backend operations but must NOT
+replace readable IDs in code.
+
+==================================================== 4. DETERMINISTIC
+ROLLOUT STRATEGY ====================================================
+
+To ensure consistent percentage rollout:
+
+1)  Obtain a stable installation identifier:
+
+    -   Logged-in user ID (preferred)
+    -   Firebase App Instance ID
+    -   Locally generated UUID (POC acceptable)
+
+2)  Compute deterministic bucket:
+
+    bucket = hash(installationId + controlId) % 100
+
+3)  If bucket < percentage → user is included in rollout
+
+This guarantees: - Stable decision over time - Same logic across iOS and
+Android - No random behavior per session
+
+==================================================== 5. LOCAL MODE
+GUARDRAILS ====================================================
+
+Local overrides must NEVER affect production builds.
+
+Protection layers:
+
+Compile-time: #if DEBUG || QA enable overrides #endif
+
+Runtime safety: if isProduction && overridesEnabled ignore overrides or
+trigger assertion
+
+Overrides must be persisted (UserDefaults) so debug testing survives app
+restarts.
+
+==================================================== 6. ON-DEMAND
+EVALUATION PRINCIPLE
+====================================================
+
+Feature decisions should be evaluated when needed, not eagerly at app
+launch.
+
+Example: Instead of pre-evaluating all 200 flags at startup, evaluate
+when building the specific screen.
+
+Benefits: - Faster startup - Cleaner architecture - Reduced unnecessary
+processing
+
+==================================================== 7. FIREBASE
+REQUIREMENTS (FREE PLAN)
+====================================================
+
+For Feature Flags and Rollouts: Firebase Remote Config (Free tier
+sufficient)
+
+For A/B Testing (true experiments in console): Remote Config + Firebase
+Analytics
+
+For Throttling (real limits): Server-side implementation recommended
+
+==================================================== 8. RISKS TO AVOID
+====================================================
+
+1)  Cross-platform inconsistency Ensure identical hash algorithm and
+    seed usage.
+
+2)  Accidental override in production Enforce compile and runtime
+    guards.
+
+3)  Overcoupling to Firebase Use repository abstraction.
+
+4)  Eternal flags Include lifecycle metadata even in POC.
+
+==================================================== 9. SUCCESS CRITERIA
+OF THE POC ====================================================
+
+The POC is successful if:
+
+-   A flag can be toggled from Firebase and reflected in-app
+-   A rollout percentage works deterministically
+-   An experiment assigns stable variants
+-   Local override works only in non-production
+-   Architecture is portable to main project
+
+
+Tarea 1 (la primera que haría)
+
+1) Definir el contrato mínimo + modelo Swift + decoder (Snapshot)
+
+Objetivo: que tu app pueda convertir un JSON (venga de donde venga) en un FeatureControlsSnapshot usable.
+
+Entregable de la tarea 1:
+	•	FeatureControlType (flag / rollout / experiment / throttle aunque throttle sea placeholder)
+	•	FeatureControlDTO / FeatureControlsSnapshot
+	•	JSONDecoder + test con un JSON hardcodeado
+	•	Un FeatureControlRepository “fake” que regrese ese JSON (sin Firebase aún)
+
+Con esto ya tienes la base de “single source of truth” y puedes construir el evaluator encima sin pelearte con Firebase todavía.
+
+⸻
+
+Las demás tareas (orden sugerido para atacarlas)
+
+2) Crear FeatureControlRepository (v1 local)
+	•	Fuente: archivo local en bundle o string en memoria.
+	•	API: fetchSnapshot() async throws -> FeatureControlsSnapshot
+
+3) Implementar UserIdentityProvider (POC)
+	•	v1: UUID persistido en Keychain/UserDefaults (estable)
+	•	API: var stableID: String
+
+4) Implementar DeterministicBucketer (hash % 100)
+	•	API: bucket(for controlId: String, userId: String) -> Int
+	•	Importante: decide hash desde ya (ej. SHA256 → tomar 8 bytes → UInt64) para que sea portable Android.
+
+5) Implementar FeatureControlEvaluator
+	•	isEnabled(flagId)
+	•	isIncludedInRollout(rolloutId)
+	•	variant(for experimentId) (A/B)
+	•	throttle: devuelve config pero sin enforcement real (POC)
+
+6) Implementar LocalOverrideStore + guardrails
+	•	DEBUG/QA only: persistir overrides
+	•	Runtime guard: si prod → ignorar overrides
+	•	API: override(flagId), setOverride, clearOverride
+
+7) Implementar FeatureControlClient (fachada)
+
+Una sola puerta: features.isEnabled("checkout_new_flow")
+Internamente usa snapshot + overrides + evaluator.
+
+8) Observabilidad (why ON/OFF)
+	•	DecisionTrace (reason: override / rollout bucket / firebase value / default)
+	•	Log + opcional evento analytics.
+
+9) Integración Firebase Remote Config (swap de repo)
+	•	Cambias el repository local por uno que:
+	•	fetch + activate
+	•	lee el string JSON
+	•	decodifica snapshot
+
+10) Debug menu (tu FeatureFlagsDebugView)
+	•	consumir FeatureControlClient
+	•	mostrar valor remoto + override + reason
+
+⸻
+
+Si quieres que lo dejemos ultra accionable, aquí va la Tarea 1 desglosada en subtasks (para que literal abras tickets):
+
+T1.1 Crear FeatureControlType + FeatureControlDTO
+T1.2 Crear FeatureControlsSnapshot (schemaVersion + controls)
+T1.3 Agregar Decodable + CodingKeys + tests de parseo
+T1.4 Crear JSON mínimo de ejemplo (flag + rollout + experiment)
+T1.5 Crear InMemoryFeatureControlRepository que regrese snapshot
+
+Cuando termines Tarea 1, ya me pegas tu JSON mínimo y armamos juntos el evaluator (Tarea 5) sin tocar Firebase todavía.
+
+END OF DOCUMENT

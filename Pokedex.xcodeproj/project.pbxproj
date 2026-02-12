@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 55;
+	objectVersion = 70;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -115,6 +115,11 @@
 		EE1FD91329C91DEE0098ABAB /* PokedexDetailEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexDetailEntity.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		904D7E8D2F3E7A3900018280 /* FTT */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = FTT; sourceTree = "<group>"; };
+		904D7E9E2F3E7B0A00018280 /* FTTTests */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = FTTTests; sourceTree = "<group>"; };
+/* End PBXFileSystemSynchronizedRootGroup section */
+
 /* Begin PBXFrameworksBuildPhase section */
 		906764BF291026310027D4B1 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
@@ -191,6 +196,7 @@
 		906764C4291026310027D4B1 /* Pokedex */ = {
 			isa = PBXGroup;
 			children = (
+				904D7E8D2F3E7A3900018280 /* FTT */,
 				A1AE7DD02AEF3405007452EA /* Localizables */,
 				90285B6F29156DF800A67AE3 /* Reusable */,
 				9056F0672910A0FE000C98C2 /* Networking */,
@@ -296,6 +302,7 @@
 		90DF091D292445E0005FA632 /* PokedexTests */ = {
 			isa = PBXGroup;
 			children = (
+				904D7E9E2F3E7B0A00018280 /* FTTTests */,
 				90DF092529244604005FA632 /* PokedexMainModuleTests */,
 			);
 			path = PokedexTests;
@@ -435,6 +442,9 @@
 			);
 			dependencies = (
 			);
+			fileSystemSynchronizedGroups = (
+				904D7E8D2F3E7A3900018280 /* FTT */,
+			);
 			name = Pokedex;
 			productName = UnitTestingBaz;
 			productReference = 906764C2291026310027D4B1 /* Pokedex.app */;
@@ -452,6 +462,9 @@
 			);
 			dependencies = (
 				90DF0921292445E0005FA632 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				904D7E9E2F3E7B0A00018280 /* FTTTests */,
 			);
 			name = PokedexTests;
 			productName = PokedexTests;
