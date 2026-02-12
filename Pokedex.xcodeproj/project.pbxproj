@@ -14,6 +14,8 @@
 		90356D2A29105AFA0013CDEA /* PokedexMainEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90356D2929105AFA0013CDEA /* PokedexMainEntity.swift */; };
 		90356D2F291068550013CDEA /* PokemonCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90356D2E291068550013CDEA /* PokemonCell.swift */; };
 		90356D3129106BA00013CDEA /* PokedexSectionHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90356D3029106BA00013CDEA /* PokedexSectionHeaderView.swift */; };
+		904D7E8A2F3E6C0C00018280 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 904D7E892F3E6C0C00018280 /* FirebaseCore */; };
+		904D7E8C2F3E6C1800018280 /* FirebaseRemoteConfig in Frameworks */ = {isa = PBXBuildFile; productRef = 904D7E8B2F3E6C1800018280 /* FirebaseRemoteConfig */; };
 		9056F0692910A107000C98C2 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056F0682910A107000C98C2 /* Endpoint.swift */; };
 		9056F06B2910AA5F000C98C2 /* ServiceAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9056F06A2910AA5F000C98C2 /* ServiceAPI.swift */; };
 		906764C6291026310027D4B1 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906764C5291026310027D4B1 /* AppDelegate.swift */; };
@@ -27,6 +29,7 @@
 		906764E82910290B0027D4B1 /* PokedexMainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906764E72910290B0027D4B1 /* PokedexMainInteractor.swift */; };
 		906764EA291029150027D4B1 /* PokedexMainPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906764E9291029150027D4B1 /* PokedexMainPresenter.swift */; };
 		906764EC291029200027D4B1 /* PokedexMainRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 906764EB291029200027D4B1 /* PokedexMainRouter.swift */; };
+		90C6D1FC2F3E684500749176 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 90C6D1FB2F3E684500749176 /* GoogleService-Info.plist */; };
 		90D14E8F2922A7FA004EE907 /* ServiceProtocols.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14E8E2922A7FA004EE907 /* ServiceProtocols.swift */; };
 		90D14E912922A83D004EE907 /* ServiceError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14E902922A83D004EE907 /* ServiceError.swift */; };
 		90D14ECE2923F151004EE907 /* PokedexStartPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90D14ECD2923F151004EE907 /* PokedexStartPresenter.swift */; };
@@ -84,6 +87,7 @@
 		906764E72910290B0027D4B1 /* PokedexMainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexMainInteractor.swift; sourceTree = "<group>"; };
 		906764E9291029150027D4B1 /* PokedexMainPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexMainPresenter.swift; sourceTree = "<group>"; };
 		906764EB291029200027D4B1 /* PokedexMainRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexMainRouter.swift; sourceTree = "<group>"; };
+		90C6D1FB2F3E684500749176 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		90D14E8E2922A7FA004EE907 /* ServiceProtocols.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceProtocols.swift; sourceTree = "<group>"; };
 		90D14E902922A83D004EE907 /* ServiceError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceError.swift; sourceTree = "<group>"; };
 		90D14ECD2923F151004EE907 /* PokedexStartPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PokedexStartPresenter.swift; sourceTree = "<group>"; };
@@ -116,6 +120,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				904D7E8A2F3E6C0C00018280 /* FirebaseCore in Frameworks */,
+				904D7E8C2F3E6C1800018280 /* FirebaseRemoteConfig in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +151,13 @@
 			path = Cells;
 			sourceTree = "<group>";
 		};
+		904D7E882F3E6C0C00018280 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		9056F0672910A0FE000C98C2 /* Networking */ = {
 			isa = PBXGroup;
 			children = (
@@ -161,6 +174,7 @@
 			children = (
 				906764C4291026310027D4B1 /* Pokedex */,
 				90DF091D292445E0005FA632 /* PokedexTests */,
+				904D7E882F3E6C0C00018280 /* Frameworks */,
 				906764C3291026310027D4B1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -189,6 +203,7 @@
 				906764CE291026330027D4B1 /* Assets.xcassets */,
 				906764D0291026330027D4B1 /* LaunchScreen.storyboard */,
 				906764D3291026330027D4B1 /* Info.plist */,
+				90C6D1FB2F3E684500749176 /* GoogleService-Info.plist */,
 			);
 			path = Pokedex;
 			sourceTree = "<group>";
@@ -472,6 +487,9 @@
 				"es-419",
 			);
 			mainGroup = 906764B9291026310027D4B1;
+			packageReferences = (
+				90C6D1FA2F3E682B00749176 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			productRefGroup = 906764C3291026310027D4B1 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -488,6 +506,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				906764D2291026330027D4B1 /* LaunchScreen.storyboard in Resources */,
+				90C6D1FC2F3E684500749176 /* GoogleService-Info.plist in Resources */,
 				A1AE7DCB2AEF3343007452EA /* Localizable.strings in Resources */,
 				906764CF291026330027D4B1 /* Assets.xcassets in Resources */,
 			);
@@ -734,7 +753,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = FT46VHZYDK;
+				DEVELOPMENT_TEAM = 6PT9Z5J23V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pokedex/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -761,7 +780,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = FT46VHZYDK;
+				DEVELOPMENT_TEAM = 6PT9Z5J23V;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Pokedex/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -860,6 +879,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		90C6D1FA2F3E682B00749176 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 12.9.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		904D7E892F3E6C0C00018280 /* FirebaseCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90C6D1FA2F3E682B00749176 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseCore;
+		};
+		904D7E8B2F3E6C1800018280 /* FirebaseRemoteConfig */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 90C6D1FA2F3E682B00749176 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
+			productName = FirebaseRemoteConfig;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 906764BA291026310027D4B1 /* Project object */;
 }
