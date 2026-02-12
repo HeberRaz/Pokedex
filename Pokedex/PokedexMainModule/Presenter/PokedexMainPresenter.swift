@@ -39,11 +39,12 @@ extension PokedexMainPresenter: PokedexMainPresenterProtocol {
     func reloadSections() {
         view?.reloadInformation()
     }
-    
-    func willFetchPokemons() {
-        interactor?.fetchPokemonBlock()
+
+    func didLoad() {
+        interactor?.loadFeatureControls()
+        willFetchPokemons()
     }
-    
+
     func shouldPrefetch(at indexPaths: [IndexPath]) {
         if indexPaths.contains(where: isLoadingCell) {
             guard !isFetchInProgress else { return }
@@ -56,6 +57,11 @@ extension PokedexMainPresenter: PokedexMainPresenterProtocol {
         let currentCount: Int = model.count
         let shouldFetchNextPokemonBlock: Bool = indexPath.row >= currentCount - 1
         return shouldFetchNextPokemonBlock
+    }
+
+    // MARK: - Private methods
+    private func willFetchPokemons() {
+        interactor?.fetchPokemonBlock()
     }
 }
 
@@ -74,5 +80,13 @@ extension PokedexMainPresenter: PokedexMainInteractorOutputProtocol {
     func onReceivedPokemon(_ pokemon: Pokemon) {
         self.model.append(pokemon)
         view?.fillPokemonList()
+    }
+
+    func onLoadedFeatureControls(count: Int) {
+        print("✅ Loaded controls: \(count)")
+    }
+
+    func onFailedLoadingFeatureControls(_ error: Error) {
+        print("❌ Failed to load snapshot:", error)
     }
 }

@@ -41,7 +41,7 @@ protocol PokedexMainPresenterProtocol: AnyObject {
     
     func reloadSections()
     func willPopController(from view: PokedexMainViewControllerProtocol)
-    func willFetchPokemons()
+    func didLoad()
 }
 
 extension PokedexMainPresenterProtocol {
@@ -63,6 +63,7 @@ protocol PokedexMainInteractorInputProtocol: AnyObject {
     func fetchDetailFrom(pokemonName: String)
     
     func linkDependencies(remoteData: PokedexMainRemoteDataInputProtocol, presenter: PokedexMainInteractorOutputProtocol)
+    func loadFeatureControls()
 }
 
 extension PokedexMainInteractorInputProtocol {
@@ -84,6 +85,8 @@ protocol PokedexMainInteractorOutputProtocol: AnyObject {
     
     func onReceivedData(with pokemonBlock: PokemonBlock)
     func onReceivedPokemon(_ pokemons: Pokemon)
+    func onLoadedFeatureControls(count: Int)
+    func onFailedLoadingFeatureControls(_ error: Error)
 }
 
 // Interactor > RemoteData

@@ -10,7 +10,7 @@ import UIKit
 final class PokedexMainRouter: PokedexMainRouterProtocol {
     func createPokedexMainModule() -> UIViewController {
         let view = PokedexMainViewController()
-        let interactor = PokedexMainInteractor()
+        let interactor = PokedexMainInteractor(featureRepository: createFeatureControlRepository())
         let presenter = PokedexMainPresenter()
         let service = MainQueueDispatchDecorator(decoratee: ServiceAPI(session: URLSession.shared))
         let remoteData = PokedexMainRemoteDataManager(service: service)
@@ -32,5 +32,11 @@ final class PokedexMainRouter: PokedexMainRouterProtocol {
         guard let viewController: UIViewController = view as? UIViewController else { return }
         let emptyViewController = ViewController()
         viewController.navigationController?.pushViewController(emptyViewController, animated: true)
+    }
+
+    private func createFeatureControlRepository() -> FeatureControlRepository {
+        LocalFeatureControlRepository(
+            source: .bundle(name: "feature_controls", ext: "json", bundle: .main)
+        )
     }
 }

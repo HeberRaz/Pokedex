@@ -16,6 +16,10 @@ public final class InMemoryFeatureControlRepository: FeatureControlRepository {
 
     public func fetchSnapshot() async throws -> FeatureControlsSnapshot {
         let data = Data(json.utf8)
-        return try FeatureControlsDecoding.decode(from: data)
+        do {
+            return try FeatureControlsDecoding.decode(from: data)
+        } catch {
+            throw FeatureControlRepositoryError.decodingFailed(error)
+        }
     }
 }

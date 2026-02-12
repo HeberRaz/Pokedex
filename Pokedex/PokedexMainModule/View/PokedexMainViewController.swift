@@ -20,7 +20,7 @@ final class PokedexMainViewController: UIViewController {
     
     override func loadView() {
         super.loadView()
-        presenter?.willFetchPokemons()
+        presenter?.didLoad()
         setupNavigationBar()
         setupTableView()
         registerCells()

@@ -17,7 +17,22 @@ class PokedexMainInteractor {
     var nextBlockUrl: String?
     
     // MARK: - Private properties
-    private var pokemonList: [Pokemon] = []
+    private var pokemonList: [Pokemon]
+    private let featureRepository: FeatureControlRepository
+
+    init(
+        presenter: PokedexMainInteractorOutputProtocol? = nil,
+        remoteData: PokedexMainRemoteDataInputProtocol? = nil,
+        nextBlockUrl: String? = nil,
+        pokemonList: [Pokemon] = [],
+        featureRepository: FeatureControlRepository
+    ) {
+        self.presenter = presenter
+        self.remoteData = remoteData
+        self.nextBlockUrl = nextBlockUrl
+        self.pokemonList = pokemonList
+        self.featureRepository = featureRepository
+    }
 }
 
 extension PokedexMainInteractor: PokedexMainInteractorInputProtocol {
@@ -27,6 +42,21 @@ extension PokedexMainInteractor: PokedexMainInteractorInputProtocol {
     
     func fetchDetailFrom(pokemonName: String) {
         remoteData?.requestPokemon(pokemonName)
+    }
+
+    func loadFeatureControls() {
+        Task {
+            do {
+                let snapshot = try await featureRepository.fetchSnapshot()
+                await MainActor.run {
+                    presenter?.onLoadedFeatureControls(count: snapshot.controls.count)
+                }
+            } catch {
+                await MainActor.run {
+                    presenter?.onFailedLoadingFeatureControls(error)
+                }
+            }
+        }
     }
 }
 
