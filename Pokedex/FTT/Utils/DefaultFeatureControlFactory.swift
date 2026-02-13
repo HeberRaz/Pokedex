@@ -8,7 +8,7 @@
 import Foundation
 
 final class DefaultFeatureControlFactory: FeatureControlFactory {
-    func makeService() -> FeatureControlService {
+    func makeService() -> FeatureControlAdvancedService {
 
         let repository = LocalFeatureControlRepository(
             source: .bundle(name: "feature_controls", ext: "json", bundle: .main)
@@ -22,9 +22,12 @@ final class DefaultFeatureControlFactory: FeatureControlFactory {
             bucketer: bucketer
         )
 
+        let overrideStore = UserDefaultsLocalOverrideStore()
+
         return DefaultFeatureControlService(
             repository: repository,
-            evaluator: evaluator
+            evaluator: evaluator,
+            overrideStore: overrideStore
         )
     }
 }
