@@ -181,8 +181,7 @@ Las demás tareas (orden sugerido para atacarlas)
 
 7) Implementar FeatureControlClient (fachada)
 
-Una sola puerta: features.isEnabled("checkout_new_flow")
-Internamente usa snapshot + overrides + evaluator.
+Implementa FeatureControlClient como una fachada con tres capacidades (todas resuelven internamente snapshot + overrides + evaluator)
 
 8) Observabilidad (why ON/OFF)
 	•	DecisionTrace (reason: override / rollout bucket / firebase value / default)

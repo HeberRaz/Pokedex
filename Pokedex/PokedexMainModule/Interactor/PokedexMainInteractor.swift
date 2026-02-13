@@ -18,14 +18,14 @@ class PokedexMainInteractor {
     
     // MARK: - Private properties
     private var pokemonList: [Pokemon]
-    private let featureControl: FeatureControlService
+    private let featureControl: FeatureControlClient
 
     init(
         presenter: PokedexMainInteractorOutputProtocol? = nil,
         remoteData: PokedexMainRemoteDataInputProtocol? = nil,
         nextBlockUrl: String? = nil,
         pokemonList: [Pokemon] = [],
-        featureControl: FeatureControlService
+        featureControl: FeatureControlClient
     ) {
         self.presenter = presenter
         self.remoteData = remoteData

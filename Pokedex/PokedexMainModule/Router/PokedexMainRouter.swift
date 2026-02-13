@@ -11,7 +11,7 @@ final class PokedexMainRouter: PokedexMainRouterProtocol {
     func createPokedexMainModule() -> UIViewController {
         let view = PokedexMainViewController()
         let interactor = PokedexMainInteractor(
-            featureControl: createFeatureControlService()
+            featureControl: createFeatureControlClient()
         )
         let presenter = PokedexMainPresenter()
         let service = MainQueueDispatchDecorator(decoratee: ServiceAPI(session: URLSession.shared))
@@ -36,8 +36,8 @@ final class PokedexMainRouter: PokedexMainRouterProtocol {
         viewController.navigationController?.pushViewController(emptyViewController, animated: true)
     }
 
-    private func createFeatureControlService() -> FeatureControlService {
+    private func createFeatureControlClient() -> FeatureControlClient {
         let factory = DefaultFeatureControlFactory()
-        return factory.makeService()
+        return factory.makeClient()
     }
 }

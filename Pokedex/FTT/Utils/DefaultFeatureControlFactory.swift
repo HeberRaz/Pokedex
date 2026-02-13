@@ -8,7 +8,12 @@
 import Foundation
 
 final class DefaultFeatureControlFactory: FeatureControlFactory {
-    func makeService() -> FeatureControlAdvancedService {
+
+    func makeClient() -> FeatureControlClient {
+        DefaultFeatureControlClient(service: makeService())
+    }
+
+    private func makeService() -> FeatureControlAdvancedService {
 
         let repository = LocalFeatureControlRepository(
             source: .bundle(name: "feature_controls", ext: "json", bundle: .main)

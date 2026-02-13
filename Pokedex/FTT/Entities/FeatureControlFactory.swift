@@ -8,5 +8,5 @@
 import Foundation
 
 protocol FeatureControlFactory {
-    func makeService() -> FeatureControlAdvancedService
+    func makeClient() -> FeatureControlClient
 }
