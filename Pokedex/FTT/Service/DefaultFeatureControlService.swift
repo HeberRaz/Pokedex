@@ -10,19 +10,12 @@ import Foundation
 final class DefaultFeatureControlService: FeatureControlService {
 
     private let repository: FeatureControlRepository
-    private let identityProvider: UserIdentityProvider
-    private let bucketer: DeterministicBucketer
-
+    private let evaluator: FeatureControlEvaluating
     private var snapshot: FeatureControlsSnapshot?
 
-    init(
-        repository: FeatureControlRepository,
-        identityProvider: UserIdentityProvider,
-        bucketer: DeterministicBucketer
-    ) {
+    init(repository: FeatureControlRepository, evaluator: FeatureControlEvaluating) {
         self.repository = repository
-        self.identityProvider = identityProvider
-        self.bucketer = bucketer
+        self.evaluator = evaluator
     }
 
     func refresh() async throws {
@@ -30,39 +23,18 @@ final class DefaultFeatureControlService: FeatureControlService {
     }
 
     func isEnabled(_ id: String) -> Bool {
-        guard let control = snapshot?.controls.first(where: { $0.id == id }) else { return false }
+        guard let snap = snapshot else { return false }
+        guard let c = snap.controls.first(where: { $0.id == id }) else { return false }
 
-        switch control.type {
-
+        switch c.type {
             case .flag:
-                return control.enabled
-
+                return evaluator.isEnabled(flagId: id, snapshot: snap)
             case .rollout:
-                // Rollout means:
-                // - must be enabled
-                // - must have percentage [0..100]
-                guard (control.enabled),
-                      let percentage = control.percentage,
-                      (0...100).contains(percentage) else {
-                    return false
-                }
-
-                // Deterministic decision
-                let userId = identityProvider.stableID
-                let bucket = bucketer.bucket(for: id, userId: userId)
-
-                // Optional debug for your POC
-                print("🧮 rollout id=\(id) user=\(userId.prefix(6)) bucket=\(bucket) pct=\(percentage) -> \(bucket < percentage)")
-
-                return bucket < percentage
-
+                return evaluator.isIncludedInRollout(rolloutId: id, snapshot: snap)
             case .experiment:
-                // POC: just ON/OFF for now. Later you add variant assignment with weights.
-                return control.enabled
-
+                return evaluator.variant(for: id, snapshot: snap) != nil // o decide que “enabled” significa “tiene variante”
             case .throttle:
-                // POC placeholder
-                return control.enabled
+                return evaluator.throttleConfig(for: id, snapshot: snap) != nil
         }
     }
 }

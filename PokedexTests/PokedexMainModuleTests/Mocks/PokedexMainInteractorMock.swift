@@ -13,6 +13,7 @@ enum PokedexMainInteractorMockCalls {
     case handlePokemonBlockFetch
     case handleFetchedPokemonDetail
     case handleServiceError
+    case loadFeatureControls
 }
 
 final class PokedexMainInteractorMock: PokedexMainInteractorInputProtocol, PokedexRemoteDataOutputProtocol {
@@ -39,5 +40,8 @@ final class PokedexMainInteractorMock: PokedexMainInteractorInputProtocol, Poked
     func handleService(error: Error) {
         self.catchedError = (error as? ServiceError)
         calls.append(.handleServiceError)
+    }
+    func loadFeatureControls() {
+        calls.append(.loadFeatureControls)
     }
 }

@@ -15,7 +15,7 @@ class PokedexMainInteractorTests: XCTestCase {
 
     override func setUp() {
         super.setUp()
-        sut = PokedexMainInteractor()
+        sut = PokedexMainInteractor(featureControl: DefaultFeatureControlFactory().makeService())
         remoteDataManager = PokedexMainRemoteDataManagerMock()
         sut.remoteData = remoteDataManager
     }
