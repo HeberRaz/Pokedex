@@ -20,6 +20,9 @@ final class DefaultUserIdentityProvider: UserIdentityProvider {
         self.userDefaults = userDefaults
     }
 
+    // ⚠️ Here we are using UserDefaults due to the POC. It is important to use a REAL stable Id.
+    // Do we have it? does it persist across new installations?
+    // Investigate further.
     var stableID: String {
         if let existing = userDefaults.string(forKey: Keys.stableID), !existing.isEmpty {
             return existing

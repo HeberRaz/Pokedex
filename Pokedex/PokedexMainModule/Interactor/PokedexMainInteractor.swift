@@ -18,23 +18,20 @@ class PokedexMainInteractor {
     
     // MARK: - Private properties
     private var pokemonList: [Pokemon]
-    private let featureRepository: FeatureControlRepository
-    private let identityProvider: UserIdentityProvider
+    private let featureControl: FeatureControlService
 
     init(
         presenter: PokedexMainInteractorOutputProtocol? = nil,
         remoteData: PokedexMainRemoteDataInputProtocol? = nil,
         nextBlockUrl: String? = nil,
         pokemonList: [Pokemon] = [],
-        featureRepository: FeatureControlRepository,
-        identityProvider: UserIdentityProvider
+        featureControl: FeatureControlService
     ) {
         self.presenter = presenter
         self.remoteData = remoteData
         self.nextBlockUrl = nextBlockUrl
         self.pokemonList = pokemonList
-        self.featureRepository = featureRepository
-        self.identityProvider = identityProvider
+        self.featureControl = featureControl
     }
 }
 
@@ -50,10 +47,10 @@ extension PokedexMainInteractor: PokedexMainInteractorInputProtocol {
     func loadFeatureControls() {
         Task {
             do {
-                let snapshot = try await featureRepository.fetchSnapshot()
-                await MainActor.run {
-                    presenter?.onLoadedFeatureControls(count: snapshot.controls.count)
-                }
+                try await featureControl.refresh()
+
+                let enabled = featureControl.isEnabled("checkout_new_flow_rollout")
+                print("🎯 rollout enabled:", enabled)
             } catch {
                 await MainActor.run {
                     presenter?.onFailedLoadingFeatureControls(error)
