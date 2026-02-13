@@ -9,7 +9,7 @@ import Foundation
 
 protocol FeatureControlEvaluating {
     func isEnabled(flagId: String, snapshot: FeatureControlsSnapshot) -> Bool
-    func isIncludedInRollout(rolloutId: String, snapshot: FeatureControlsSnapshot) -> Bool
-    func variant(for experimentId: String, snapshot: FeatureControlsSnapshot) -> ExperimentVariant?
+    func evaluateRollout(rolloutId: String, snapshot: FeatureControlsSnapshot) -> RolloutEvaluationResult?
+    func evaluateExperiment(experimentId: String, snapshot: FeatureControlsSnapshot) -> ExperimentEvaluationResult?
     func throttleConfig(for throttleId: String, snapshot: FeatureControlsSnapshot) -> ThrottleConfig?
 }

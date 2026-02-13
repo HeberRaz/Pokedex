@@ -1,6 +1,6 @@
 //
 //  FeatureControlClientTests.swift
-//  Pokedex
+//  PokedexTests
 //
 //  Created by Heber Alvarez on 13/02/26.
 //

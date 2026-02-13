@@ -184,8 +184,7 @@ Las demás tareas (orden sugerido para atacarlas)
 Implementa FeatureControlClient como una fachada con tres capacidades (todas resuelven internamente snapshot + overrides + evaluator)
 
 8) Observabilidad (why ON/OFF)
-	•	DecisionTrace (reason: override / rollout bucket / firebase value / default)
-	•	Log + opcional evento analytics.
+	•	DecisionTrace (reason: override | snapshot/evaluator | missing/invalid | default) + metadata (bucket/weights/etc.)
 
 9) Integración Firebase Remote Config (swap de repo)
 	•	Cambias el repository local por uno que:

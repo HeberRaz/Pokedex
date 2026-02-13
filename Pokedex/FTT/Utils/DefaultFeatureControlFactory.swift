@@ -29,10 +29,19 @@ final class DefaultFeatureControlFactory: FeatureControlFactory {
 
         let overrideStore = UserDefaultsLocalOverrideStore()
 
+        let tracer: DecisionTracing = {
+#if DEBUG
+            return LoggerDecisionTracer()
+#else
+            return NoopDecisionTracer()
+#endif
+        }()
+
         return DefaultFeatureControlService(
             repository: repository,
             evaluator: evaluator,
-            overrideStore: overrideStore
+            overrideStore: overrideStore,
+            decisionTracer: tracer
         )
     }
 }
