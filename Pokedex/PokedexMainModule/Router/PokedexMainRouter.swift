@@ -10,7 +10,10 @@ import UIKit
 final class PokedexMainRouter: PokedexMainRouterProtocol {
     func createPokedexMainModule() -> UIViewController {
         let view = PokedexMainViewController()
-        let interactor = PokedexMainInteractor(featureRepository: createFeatureControlRepository())
+        let interactor = PokedexMainInteractor(
+            featureRepository: createFeatureControlRepository(),
+            identityProvider: createUserIdentityProvider()
+        )
         let presenter = PokedexMainPresenter()
         let service = MainQueueDispatchDecorator(decoratee: ServiceAPI(session: URLSession.shared))
         let remoteData = PokedexMainRemoteDataManager(service: service)
@@ -38,5 +41,9 @@ final class PokedexMainRouter: PokedexMainRouterProtocol {
         LocalFeatureControlRepository(
             source: .bundle(name: "feature_controls", ext: "json", bundle: .main)
         )
+    }
+
+    private func createUserIdentityProvider() -> UserIdentityProvider {
+        DefaultUserIdentityProvider(userDefaults: .standard)
     }
 }

@@ -19,19 +19,22 @@ class PokedexMainInteractor {
     // MARK: - Private properties
     private var pokemonList: [Pokemon]
     private let featureRepository: FeatureControlRepository
+    private let identityProvider: UserIdentityProvider
 
     init(
         presenter: PokedexMainInteractorOutputProtocol? = nil,
         remoteData: PokedexMainRemoteDataInputProtocol? = nil,
         nextBlockUrl: String? = nil,
         pokemonList: [Pokemon] = [],
-        featureRepository: FeatureControlRepository
+        featureRepository: FeatureControlRepository,
+        identityProvider: UserIdentityProvider
     ) {
         self.presenter = presenter
         self.remoteData = remoteData
         self.nextBlockUrl = nextBlockUrl
         self.pokemonList = pokemonList
         self.featureRepository = featureRepository
+        self.identityProvider = identityProvider
     }
 }
 
