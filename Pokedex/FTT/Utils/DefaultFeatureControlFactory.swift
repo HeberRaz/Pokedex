@@ -15,9 +15,32 @@ final class DefaultFeatureControlFactory: FeatureControlFactory {
 
     private func makeService() -> FeatureControlAdvancedService {
 
-        let repository = LocalFeatureControlRepository(
+        // Local baseline (siempre disponible)
+        let localRepository = LocalFeatureControlRepository(
             source: .bundle(name: "feature_controls", ext: "json", bundle: .main)
         )
+
+        // Remote (Firebase)
+        let remoteProvider = FirebaseRemoteConfigProvider(
+            minimumFetchInterval: {
+#if DEBUG
+                return 0
+#else
+                return 3600
+#endif
+            }()
+        )
+
+        let firebaseRepository = FirebaseFeatureControlRepository(
+            remoteConfig: remoteProvider,
+            key: "ftt_snapshot_json",
+            policy: .acceptRemoteOrDefault
+        )
+
+        // Fallback chain: remote -> local
+        let repository: FeatureControlRepository = FallbackFeatureControlRepository(
+            primary: firebaseRepository,
+            fallback: localRepository)
 
         let identity = DefaultUserIdentityProvider(userDefaults: .standard)
         let bucketer = SHA256DeterministicBucketer()
