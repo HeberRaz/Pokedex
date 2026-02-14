@@ -52,19 +52,40 @@ final class DefaultFeatureControlFactory: FeatureControlFactory {
 
         let overrideStore = UserDefaultsLocalOverrideStore()
 
-        let tracer: DecisionTracing = {
-#if DEBUG
-            return LoggerDecisionTracer()
-#else
-            return NoopDecisionTracer()
-#endif
+        let notificationTracer = NotificationCenterDecisionTracer()
+
+        let loggerTracer: DecisionTracing = LoggerDecisionTracer()
+
+        let sampledLogger: DecisionTracing = {
+    #if DEBUG
+            // In debug we want full fidelity for troubleshooting.
+            return loggerTracer
+    #else
+            // In production, keep logs lightweight with sampling.
+            return SamplingDecisionTracer(base: loggerTracer, sampleRate: 0.1)
+    #endif
         }()
+
+        let tracer: DecisionTracing = CompositeDecisionTracer([
+            sampledLogger,
+            notificationTracer
+        ])
+
+        let snapshotStore = FileFeatureControlsSnapshotStore()
 
         return DefaultFeatureControlService(
             repository: repository,
             evaluator: evaluator,
             overrideStore: overrideStore,
-            decisionTracer: tracer
+            decisionTracer: tracer,
+            snapshotStore: snapshotStore,
+            minimumRefreshInterval: {
+#if DEBUG
+                return 5 // fast iterations while developing
+#else
+                return 60 // seconds between remote refresh attempts
+#endif
+            }()
         )
     }
 }

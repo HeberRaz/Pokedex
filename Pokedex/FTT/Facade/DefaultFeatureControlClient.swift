@@ -30,4 +30,8 @@ final class DefaultFeatureControlClient: FeatureControlClient {
     func throttleConfig(for throttleId: String) -> ThrottleConfig? {
         service.throttleConfig(for: throttleId)
     }
+
+    func controlsCount() -> Int {
+        service.controlsCount()
+    }
 }

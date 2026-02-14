@@ -16,11 +16,13 @@ final class FeatureControlClientTests: XCTestCase {
         var enabled: [String: Bool] = [:]
         var variants: [String: ExperimentVariant] = [:]
         var throttles: [String: ThrottleConfig] = [:]
+        var controlsCountValue: Int = 0
 
         func refresh() async throws { refreshCalled = true }
         func isEnabled(_ id: String) -> Bool { enabled[id] ?? false }
         func variant(for experimentId: String) -> ExperimentVariant? { variants[experimentId] }
         func throttleConfig(for throttleId: String) -> ThrottleConfig? { throttles[throttleId] }
+        func controlsCount() -> Int { controlsCountValue }
     }
 
     func test_client_delegates_calls_to_service() async throws {
@@ -28,6 +30,7 @@ final class FeatureControlClientTests: XCTestCase {
         service.enabled["flag_a"] = true
         service.variants["exp_a"] = .b
         service.throttles["throttle_a"] = ThrottleConfig(maxPerMinute: 3)
+        service.controlsCountValue = 4
 
         let client = DefaultFeatureControlClient(service: service)
 
@@ -37,5 +40,6 @@ final class FeatureControlClientTests: XCTestCase {
         XCTAssertTrue(client.isEnabled("flag_a"))
         XCTAssertEqual(client.variant(for: "exp_a"), .b)
         XCTAssertEqual(client.throttleConfig(for: "throttle_a")?.maxPerMinute, 3)
+        XCTAssertEqual(client.controlsCount(), 4)
     }
 }

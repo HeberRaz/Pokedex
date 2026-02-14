@@ -18,4 +18,8 @@ protocol FeatureControlClient {
 
     // Capability 3: Throttling
     func throttleConfig(for throttleId: String) -> ThrottleConfig?
+
+    /// Number of controls currently available in the latest snapshot.
+    /// Returns 0 if no snapshot has been loaded yet.
+    func controlsCount() -> Int
 }

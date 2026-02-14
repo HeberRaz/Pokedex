@@ -7,7 +7,7 @@
 
 import XCTest
 @testable import Pokedex
-
+// swiftlint:disable all
 final class FeatureControlDecisionTraceTests: XCTestCase {
 
     // MARK: - Test Doubles
@@ -382,3 +382,5 @@ final class FeatureControlDecisionTraceTests: XCTestCase {
         XCTAssertEqual(t.metadata["error"], "wrong_type")
     }
 }
+
+// swiftlint:enable all

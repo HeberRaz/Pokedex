@@ -13,27 +13,83 @@ final class DefaultFeatureControlService: FeatureControlService {
     private let evaluator: FeatureControlEvaluating
     private let overrideStore: LocalOverrideStore
     private let decisionTracer: DecisionTracing
+    private let snapshotStore: FeatureControlsSnapshotStore?
+    private let minimumRefreshInterval: TimeInterval
 
+    private let queue = DispatchQueue(label: "com.heber.Pokedex.featureControlService")
     private var snapshot: FeatureControlsSnapshot?
+    private var lastRefreshDate: Date?
 
     init(
         repository: FeatureControlRepository,
         evaluator: FeatureControlEvaluating,
         overrideStore: LocalOverrideStore,
-        decisionTracer: DecisionTracing = NoopDecisionTracer()
+        decisionTracer: DecisionTracing = NoopDecisionTracer(),
+        snapshotStore: FeatureControlsSnapshotStore? = nil,
+        minimumRefreshInterval: TimeInterval = 60
     ) {
         self.repository = repository
         self.evaluator = evaluator
         self.overrideStore = overrideStore
         self.decisionTracer = decisionTracer
+        self.snapshotStore = snapshotStore
+        self.minimumRefreshInterval = minimumRefreshInterval
+
+        // Best-effort load of last known-good snapshot from disk.
+        if let snapshotStore {
+            if let cached = try? snapshotStore.load() {
+                self.snapshot = cached
+            }
+        }
     }
 
     func refresh() async throws {
-        snapshot = try await repository.fetchSnapshot()
+        let now = Date()
+
+        // Avoid hammering the repository if we recently refreshed successfully.
+        let (currentSnapshot, lastRefresh) = queue.sync { (snapshot, lastRefreshDate) }
+        if currentSnapshot != nil,
+           let lastRefresh,
+           now.timeIntervalSince(lastRefresh) < minimumRefreshInterval {
+            return
+        }
+
+        do {
+            let newSnapshot = try await repository.fetchSnapshot()
+
+            queue.sync {
+                self.snapshot = newSnapshot
+                self.lastRefreshDate = now
+            }
+
+            // Persist last known-good snapshot. Errors here should not break callers.
+            try? snapshotStore?.save(newSnapshot)
+        } catch {
+            let existingSnapshot = queue.sync { snapshot }
+
+            // Try to recover from store first.
+            if let snapshotStore, let cached = try? snapshotStore.load() {
+                queue.sync {
+                    self.snapshot = cached
+                    self.lastRefreshDate = nil
+                }
+                return
+            }
+
+            // If we already had an in-memory snapshot, keep using it and do not fail hard.
+            if existingSnapshot != nil {
+                return
+            }
+
+            // No snapshot anywhere, propagate the failure.
+            throw error
+        }
     }
 
     func isEnabled(_ id: String) -> Bool {
-        guard let snap = snapshot else {
+        let snap = queue.sync { snapshot }
+
+        guard let snap else {
             decisionTracer.record(.init(
                 controlId: id,
                 controlType: nil,
@@ -58,15 +114,15 @@ final class DefaultFeatureControlService: FeatureControlService {
         switch control.type {
 
             case .flag:
-                if let o = overrideStore.overrideBool(for: id) {
+                if let override = overrideStore.overrideBool(for: id) {
                     decisionTracer.record(.init(
                         controlId: id,
                         controlType: control.type,
                         kind: .bool,
-                        outcome: .bool(o),
+                        outcome: .bool(override),
                         reason: .override
                     ))
-                    return o
+                    return override
                 }
 
                 let value = evaluator.isEnabled(flagId: id, snapshot: snap)
@@ -80,15 +136,15 @@ final class DefaultFeatureControlService: FeatureControlService {
                 return value
 
             case .rollout:
-                if let o = overrideStore.overrideBool(for: id) {
+                if let override = overrideStore.overrideBool(for: id) {
                     decisionTracer.record(.init(
                         controlId: id,
                         controlType: control.type,
                         kind: .bool,
-                        outcome: .bool(o),
+                        outcome: .bool(override),
                         reason: .override
                     ))
-                    return o
+                    return override
                 }
 
                 guard let result = evaluator.evaluateRollout(rolloutId: id, snapshot: snap) else {
@@ -126,8 +182,15 @@ final class DefaultFeatureControlService: FeatureControlService {
 
 extension DefaultFeatureControlService: FeatureControlAdvancedService {
 
+    func controlsCount() -> Int {
+        let snap = queue.sync { snapshot }
+        return snap?.controls.count ?? 0
+    }
+
     func variant(for experimentId: String) -> ExperimentVariant? {
-        guard let snap = snapshot else {
+        let snap = queue.sync { snapshot }
+
+        guard let snap else {
             decisionTracer.record(.init(
                 controlId: experimentId,
                 controlType: .experiment,
@@ -163,15 +226,15 @@ extension DefaultFeatureControlService: FeatureControlAdvancedService {
             return nil
         }
 
-        if let o = overrideStore.overrideVariant(for: experimentId) {
+        if let override = overrideStore.overrideVariant(for: experimentId) {
             decisionTracer.record(.init(
                 controlId: experimentId,
                 controlType: .experiment,
                 kind: .variant,
-                outcome: .variant(o),
+                outcome: .variant(override),
                 reason: .override
             ))
-            return o
+            return override
         }
 
         guard let result = evaluator.evaluateExperiment(experimentId: experimentId, snapshot: snap) else {
@@ -206,7 +269,9 @@ extension DefaultFeatureControlService: FeatureControlAdvancedService {
     }
 
     func throttleConfig(for throttleId: String) -> ThrottleConfig? {
-        guard let snap = snapshot else {
+        let snap = queue.sync { snapshot }
+
+        guard let snap else {
             decisionTracer.record(.init(
                 controlId: throttleId,
                 controlType: .throttle,
@@ -242,16 +307,16 @@ extension DefaultFeatureControlService: FeatureControlAdvancedService {
             return nil
         }
 
-        if let o = overrideStore.overrideThrottle(for: throttleId) {
+        if let override = overrideStore.overrideThrottle(for: throttleId) {
             decisionTracer.record(.init(
                 controlId: throttleId,
                 controlType: .throttle,
                 kind: .throttle,
-                outcome: .throttle(o),
+                outcome: .throttle(override),
                 reason: .override,
-                metadata: ["maxPerMinute": "\(o.maxPerMinute)"]
+                metadata: ["maxPerMinute": "\(override.maxPerMinute)"]
             ))
-            return o
+            return override
         }
 
         let config = evaluator.throttleConfig(for: throttleId, snapshot: snap)

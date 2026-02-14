@@ -22,15 +22,15 @@ final class DefaultFeatureControlEvaluator: FeatureControlEvaluating {
     // MARK: - Flag
 
     func isEnabled(flagId: String, snapshot: FeatureControlsSnapshot) -> Bool {
-        guard let c = snapshot.controls.first(where: { $0.id == flagId && $0.type == .flag }) else { return false }
-        return c.enabled
+        guard let control = snapshot.controls.first(where: { $0.id == flagId && $0.type == .flag }) else { return false }
+        return control.enabled
     }
 
     // MARK: - Rollout (returns metadata for DecisionTrace)
 
     func evaluateRollout(rolloutId: String, snapshot: FeatureControlsSnapshot) -> RolloutEvaluationResult? {
-        guard let c = snapshot.controls.first(where: { $0.id == rolloutId && $0.type == .rollout }) else { return nil }
-        guard c.enabled, let pct = c.percentage, (0...100).contains(pct) else { return nil }
+        guard let control = snapshot.controls.first(where: { $0.id == rolloutId && $0.type == .rollout }) else { return nil }
+        guard control.enabled, let pct = control.percentage, (0...100).contains(pct) else { return nil }
 
         let userId = identityProvider.stableID
         let bucket = bucketer.bucket(for: rolloutId, userId: userId)
@@ -46,8 +46,8 @@ final class DefaultFeatureControlEvaluator: FeatureControlEvaluating {
     // MARK: - Experiment (returns metadata for DecisionTrace)
 
     func evaluateExperiment(experimentId: String, snapshot: FeatureControlsSnapshot) -> ExperimentEvaluationResult? {
-        guard let c = snapshot.controls.first(where: { $0.id == experimentId && $0.type == .experiment }) else { return nil }
-        guard c.enabled, let variants = c.variants, !variants.isEmpty else { return nil }
+        guard let control = snapshot.controls.first(where: { $0.id == experimentId && $0.type == .experiment }) else { return nil }
+        guard control.enabled, let variants = control.variants, !variants.isEmpty else { return nil }
 
         // POC: A/B with weights
         let weightA = variants["A"] ?? 0
@@ -76,8 +76,8 @@ final class DefaultFeatureControlEvaluator: FeatureControlEvaluating {
     // MARK: - Throttle
 
     func throttleConfig(for throttleId: String, snapshot: FeatureControlsSnapshot) -> ThrottleConfig? {
-        guard let c = snapshot.controls.first(where: { $0.id == throttleId && $0.type == .throttle }) else { return nil }
-        guard c.enabled, let max = c.maxPerMinute else { return nil }
+        guard let control = snapshot.controls.first(where: { $0.id == throttleId && $0.type == .throttle }) else { return nil }
+        guard control.enabled, let max = control.maxPerMinute else { return nil }
         return ThrottleConfig(maxPerMinute: max)
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct FeatureControlDTO: Decodable, Sendable, Identifiable {
+public struct FeatureControlDTO: Codable, Sendable, Identifiable {
     public let id: String
     public let type: FeatureControlType
     public let enabled: Bool

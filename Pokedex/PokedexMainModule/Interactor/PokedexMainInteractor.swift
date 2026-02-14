@@ -48,8 +48,13 @@ extension PokedexMainInteractor: PokedexMainInteractorInputProtocol {
         Task {
             do {
                 try await featureControl.refresh()
-
                 let enabled = featureControl.isEnabled("checkout_new_flow_rollout")
+                let count = featureControl.controlsCount()
+
+                await MainActor.run { [weak presenter] in
+                    presenter?.onLoadedFeatureControls(count: count)
+                }
+
                 print("🎯 rollout enabled:", enabled)
             } catch {
                 await MainActor.run {

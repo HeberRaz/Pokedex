@@ -7,7 +7,7 @@
 
 import Foundation
 
-public struct FeatureControlsSnapshot: Decodable, Sendable {
+public struct FeatureControlsSnapshot: Codable, Sendable {
     public let schemaVersion: Int
     public let controls: [FeatureControlDTO]
 }

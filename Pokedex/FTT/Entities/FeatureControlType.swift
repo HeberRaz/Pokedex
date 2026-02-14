@@ -7,7 +7,7 @@
 
 import Foundation
 
-public enum FeatureControlType: String, Decodable, Sendable {
+public enum FeatureControlType: String, Codable, Sendable {
     case flag
     case rollout
     case experiment

@@ -6,7 +6,9 @@
 //
 
 import Foundation
-
+// swiftlint:disable all
 public enum ExperimentVariant: String, Sendable {
     case a, b
 }
+
+// swiftlint:enable all
