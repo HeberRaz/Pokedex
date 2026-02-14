@@ -48,14 +48,31 @@ extension PokedexMainInteractor: PokedexMainInteractorInputProtocol {
         Task {
             do {
                 try await featureControl.refresh()
-                let enabled = featureControl.isEnabled("checkout_new_flow_rollout")
-                let count = featureControl.controlsCount()
+
+                let flag    = featureControl.isEnabled("checkout_new_flow")
+                let rollout = featureControl.isEnabled("checkout_new_flow_rollout")
+                let variant = featureControl.variant(for: "home_header_experiment")
+                let throttle = featureControl.throttleConfig(for: "login_attempts")?.maxPerMinute ?? 0
 
                 await MainActor.run { [weak presenter] in
-                    presenter?.onLoadedFeatureControls(count: count)
+                    presenter?.onLoadedFeatureControls(count: featureControl.controlsCount())
                 }
 
-                print("🎯 rollout enabled:", enabled)
+                #if DEBUG
+                let variantDescription: String
+                if let variant {
+                    variantDescription = "\(variant)"
+                } else {
+                    variantDescription = "nil (missing or misconfigured)"
+                }
+
+                print("""
+                FLAG checkout_new_flow = \(flag)
+                ROLLOUT checkout_new_flow_rollout = \(rollout)
+                EXP home_header_experiment = \(variantDescription)
+                THROTTLE login_attempts = \(throttle)
+                """)
+                #endif
             } catch {
                 await MainActor.run {
                     presenter?.onFailedLoadingFeatureControls(error)

@@ -158,18 +158,26 @@ final class DefaultFeatureControlService: FeatureControlService {
                     return false
                 }
 
+                let pctOverride = overrideStore.overrideRolloutPercentage(for: id)
+                let effectivePercentage = pctOverride ?? result.percentage
+                let included = result.bucket < effectivePercentage
+
+                var metadata: [String: String] = [
+                    "bucket": "\(result.bucket)",
+                    "percentage": "\(result.percentage)",
+                    "effectivePercentage": "\(effectivePercentage)",
+                    "percentageSource": (pctOverride != nil ? "override" : "remote")
+                ]
+
                 decisionTracer.record(.init(
                     controlId: id,
                     controlType: control.type,
                     kind: .bool,
-                    outcome: .bool(result.included),
-                    reason: .snapshotEvaluator,
-                    metadata: [
-                        "bucket": "\(result.bucket)",
-                        "percentage": "\(result.percentage)"
-                    ]
+                    outcome: .bool(included),
+                    reason: (pctOverride != nil ? .override : .snapshotEvaluator),
+                    metadata: metadata
                 ))
-                return result.included
+                return included
 
             case .experiment:
                 return variant(for: id) != nil

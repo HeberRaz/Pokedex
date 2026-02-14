@@ -17,6 +17,7 @@ final class UserDefaultsLocalOverrideStore: LocalOverrideStore {
         static let boolPrefix = "ftt.override.bool."
         static let variantPrefix = "ftt.override.variant."
         static let throttlePrefix = "ftt.override.throttle."
+        static let rolloutPrefix = "ftt.override.rollout."
     }
 
     init(
@@ -62,6 +63,26 @@ final class UserDefaultsLocalOverrideStore: LocalOverrideStore {
         else { userDefaults.removeObject(forKey: key) }
     }
 
+    // MARK: - Rollout percentage
+
+    func overrideRolloutPercentage(for id: String) -> Int? {
+        guard isOverridesEnabled else { return nil }
+        let key = Keys.rolloutPrefix + id
+        let value = userDefaults.object(forKey: key) as? Int
+        guard let value, (0...100).contains(value) else { return nil }
+        return value
+    }
+
+    func setRolloutPercentageOverride(_ value: Int?, for id: String) {
+        guard isOverridesEnabled else { return }
+        let key = Keys.rolloutPrefix + id
+        if let value, (0...100).contains(value) {
+            userDefaults.set(value, forKey: key)
+        } else {
+            userDefaults.removeObject(forKey: key)
+        }
+    }
+
     // MARK: - Throttle
 
     func overrideThrottle(for id: String) -> ThrottleConfig? {
@@ -84,6 +105,7 @@ final class UserDefaultsLocalOverrideStore: LocalOverrideStore {
         userDefaults.removeObject(forKey: Keys.boolPrefix + id)
         userDefaults.removeObject(forKey: Keys.variantPrefix + id)
         userDefaults.removeObject(forKey: Keys.throttlePrefix + id)
+        userDefaults.removeObject(forKey: Keys.rolloutPrefix + id)
     }
 
     func clearAll() {

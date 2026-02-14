@@ -11,6 +11,7 @@ final class OverrideStoreStub: LocalOverrideStore {
     var boolOverrides: [String: Bool] = [:]
     var variantOverrides: [String: ExperimentVariant] = [:]
     var throttleOverrides: [String: ThrottleConfig] = [:]
+    var rolloutPercentageOverrides: [String: Int] = [:]
 
     // MARK: - Getters
 
@@ -24,6 +25,10 @@ final class OverrideStoreStub: LocalOverrideStore {
 
     func overrideThrottle(for id: String) -> ThrottleConfig? {
         throttleOverrides[id]
+    }
+
+    func overrideRolloutPercentage(for id: String) -> Int? {
+        rolloutPercentageOverrides[id]
     }
 
     // MARK: - Setters
@@ -52,17 +57,27 @@ final class OverrideStoreStub: LocalOverrideStore {
         }
     }
 
+    func setRolloutPercentageOverride(_ value: Int?, for id: String) {
+        if let value {
+            rolloutPercentageOverrides[id] = value
+        } else {
+            rolloutPercentageOverrides.removeValue(forKey: id)
+        }
+    }
+
     // MARK: - Clear
 
     func clear(id: String) {
         boolOverrides.removeValue(forKey: id)
         variantOverrides.removeValue(forKey: id)
         throttleOverrides.removeValue(forKey: id)
+        rolloutPercentageOverrides.removeValue(forKey: id)
     }
 
     func clearAll() {
         boolOverrides.removeAll()
         variantOverrides.removeAll()
         throttleOverrides.removeAll()
+        rolloutPercentageOverrides.removeAll()
     }
 }
