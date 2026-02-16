@@ -35,6 +35,11 @@ final class PokedexMainViewController: UIViewController {
     
     private func setupNavigationBar() {
         title = "Pokemon"
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .close,
+            target: self,
+            action: #selector(closeView)
+        )
     }
     
     private func setupTableView() {

@@ -6,7 +6,7 @@
         {
             "id": "checkout_new_flow_rollout",
             "type": "rollout",
-            "percentage": 20,
+            "percentage": 50,
             "enabled": true
         },
 

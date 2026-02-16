@@ -62,7 +62,7 @@ final class DefaultFeatureControlFactory: FeatureControlFactory {
             return loggerTracer
     #else
             // In production, keep logs lightweight with sampling.
-            return SamplingDecisionTracer(base: loggerTracer, sampleRate: 0.1)
+            return SamplingDecisionTracer(base: loggerTracer, sampleRate: 1)
     #endif
         }()
 
